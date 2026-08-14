@@ -12,7 +12,10 @@ const notificationRequestRoutes = require('./routes/notificationRequestRoutes');
 const pushRoutes = require('./routes/pushRoutes');
 
 const createApp = () => {
-  const app = express();
+  const { communicationContext } = require('./middlewares/communicationContext');
+
+const app = express();
+app.use(communicationContext);
   app.disable('x-powered-by');
   app.set('trust proxy', env.trustProxyHops);
   app.use(requestContext);
