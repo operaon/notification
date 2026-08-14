@@ -1,4 +1,15 @@
-# Operaon Notification & Delivery
+# Notification & Delivery
+
+> Serviço de Notification & Delivery da Operaon para entrega, templates e rastreamento de notificações.
+
+| Item | Referência |
+|---|---|
+| Documentação | [docs/INDEX.md](docs/INDEX.md) |
+| Segurança | [SECURITY.md](SECURITY.md) |
+| Contribuição | [CONTRIBUTING.md](CONTRIBUTING.md) |
+| Processo de release | [docs/release-process.md](docs/release-process.md) |
+
+---
 
 Standalone responsável por **inbox de notificações**, entregas por canal, preferências de usuário, Web Push, SMTP configurável e processamento assíncrono com retry e dead-letter. O serviço possui banco PostgreSQL próprio e não depende do banco da API gateway em runtime.
 

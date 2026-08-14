@@ -1,0 +1,20 @@
+repository: notification
+description: "Serviço de Notification & Delivery da Operaon para entrega, templates e rastreamento de notificações."
+homepage: "https://github.com/operaon/notification"
+topics:
+  - operaon
+  - notifications
+  - delivery
+  - email
+  - webhooks
+  - nodejs
+custom_properties:
+  domain_owner: notification
+  repository_type: module
+  lifecycle: active
+  documentation: docs/INDEX.md
+  security_tier: standard
+  default_branch: main
+notes:
+  - "Homepage uses the repository URL until an official public product URL is defined."
+  - "Stars, watchers, forks and audit history are GitHub-managed metrics and are not programmable repository content."
