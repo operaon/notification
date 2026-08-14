@@ -52,3 +52,8 @@ O backfill cria a entrega `in_app` como `sent` para notificações já existente
 O canal `in_app` é persistido no banco. O canal `web_push` usa VAPID e remove inscrições expiradas. O canal `email` utiliza SMTP e permanece desabilitado por padrão até que o ambiente forneça as credenciais e o feature flag correspondente. Falhas de provider são registradas em `notification_delivery_attempts`, com status, erro sanitizado, duração e número de tentativa.
 
 Nenhum segredo real deve ser versionado. Os valores locais podem ser carregados por um arquivo `.env` não rastreado ou por secret manager do ambiente de execução.
+
+<!-- OPERAON-DOCUMENTATION-LINK -->
+## Documentação
+
+A documentação técnica padronizada está em [docs/INDEX.md](docs/INDEX.md). Ela inclui arquitetura, responsabilidades, segurança, contratos, operação, testes, runbooks e decisões.
