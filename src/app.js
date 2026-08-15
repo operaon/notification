@@ -25,7 +25,14 @@ app.use(communicationContext);
   app.use(requestContext);
   app.use(pinoHttp({ logger, customProps: (req) => ({ requestId: req.requestId }) }));
   app.use(helmet());
-  app.use(cors({ origin: env.cors.origin === '*' ? true : env.cors.origin, credentials: true }));
+  const allowedCorsOrigins = String(env.cors.origin || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter((origin) => origin && origin !== '*');
+  app.use(cors({
+    origin: (origin, callback) => callback(null, !origin || allowedCorsOrigins.includes(origin)),
+    credentials: allowedCorsOrigins.length > 0,
+  }));
   app.use(compression());
   app.use(express.json({ limit: '2mb' }));
   app.use(express.urlencoded({ extended: false, limit: '100kb' }));
