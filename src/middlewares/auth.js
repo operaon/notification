@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const env = require('../config/env');
 const { verifyAccessToken } = require('../utils/jwt');
 const { AuthenticationError, AuthorizationError } = require('../utils/errors');
@@ -10,7 +11,15 @@ const getBearerToken = (header) => {
 
 const authenticateServiceKey = (req) => {
   const provided = req.get('X-Service-Key');
-  if (!provided || provided !== env.serviceApiKey) {
+  if (!provided) {
+    throw new AuthenticationError('Credencial de serviço inválida', 'SERVICE_AUTH_INVALID');
+  }
+
+  const expectedBuffer = Buffer.from(String(env.serviceApiKey), 'utf8');
+  const providedBuffer = Buffer.from(String(provided), 'utf8');
+  const matches = providedBuffer.length === expectedBuffer.length
+    && crypto.timingSafeEqual(providedBuffer, expectedBuffer);
+  if (!matches) {
     throw new AuthenticationError('Credencial de serviço inválida', 'SERVICE_AUTH_INVALID');
   }
 };
@@ -51,7 +60,7 @@ const authenticate = (req, _res, next) => {
 
 const requirePermission = (resource, action) => (req, _res, next) => {
   const permissions = req.context?.permissions || [];
-  if (req.context?.isService || permissions.includes(`${resource}:${action}`)) return next();
+  if (permissions.includes(`${resource}:${action}`)) return next();
   return next(new AuthorizationError('Permissão insuficiente', 'PERMISSION_DENIED'));
 };
 

@@ -21,10 +21,10 @@ const createNotification = async ({ context, data }) => {
   const userId = data.userId || context.userId;
   if (!tenantId) throw new ValidationError('tenantId é obrigatório para criar uma notificação', 'TENANT_CONTEXT_MISSING');
   if (!userId) throw new ValidationError('userId é obrigatório para criar uma notificação', 'NOTIFICATION_USER_REQUIRED');
-  if (data.tenantId && data.tenantId !== context.tenantId && !context.isService) {
+  if (data.tenantId && data.tenantId !== context.tenantId && !context.permissions.includes('notifications:send')) {
     throw new AuthorizationError('Tenant de destino não corresponde ao contexto autenticado', 'TENANT_CONTEXT_MISMATCH');
   }
-  if (data.userId && data.userId !== context.userId && !context.isService && !context.permissions.includes('notifications:send')) {
+  if (data.userId && data.userId !== context.userId && !context.permissions.includes('notifications:send')) {
     throw new AuthorizationError('Não é permitido criar notificações para outro usuário', 'NOTIFICATION_TARGET_FORBIDDEN');
   }
 

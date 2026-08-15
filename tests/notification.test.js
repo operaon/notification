@@ -13,19 +13,20 @@ const tenantB = '22222222-2222-4222-8222-222222222222';
 const userA = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const userB = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 
-const tokenFor = ({ tenantId = tenantA, userId = userA, permissions = [] } = {}) => jwt.sign({
+const tokenFor = ({ tenantId = tenantA, userId = userA, permissions = [], audience = env.jwt.audience, tokenType = 'access', service = false } = {}) => jwt.sign({
   sub: userId,
   tenantId,
-  tokenType: 'access',
+  tokenType,
+  service,
   iss: env.jwt.issuer,
-  aud: env.jwt.audience,
+  aud: audience,
   permissions,
   roles: [],
 }, env.jwt.secret, { algorithm: env.jwt.algorithm, expiresIn: '10m' });
 
 const headersFor = (options = {}) => ({
   Authorization: `Bearer ${tokenFor(options)}`,
-  'X-Service-Key': env.serviceApiKey,
+  'X-Service-Key': options.serviceKey || env.serviceApiKey,
   'X-Tenant-Id': options.tenantId || tenantA,
 });
 
@@ -46,6 +47,23 @@ describe('Notification & Delivery standalone contract', () => {
     await request(app).get('/health').expect(200);
     await request(app).get('/api/notifications').expect(401);
     await request(app).get('/api/notifications').set('X-Service-Key', env.serviceApiKey).expect(401);
+  });
+
+  test('rejeita audience incorreta, refresh token e credencial de serviço inválida', async () => {
+    await request(app).get('/api/notifications').set(headersFor({ audience: ['operaon-api'] })).expect(401);
+    await request(app).get('/api/notifications').set(headersFor({ tokenType: 'refresh' })).expect(401);
+    await request(app).get('/api/notifications').set(headersFor({ serviceKey: 'invalid-service-key' })).expect(401);
+  });
+
+  test('não concede privilégio implícito a token de serviço sem permissão dinâmica', async () => {
+    await request(app).post('/api/notifications').set(headersFor({ service: true })).send({
+      userId: userB,
+      tenantId: tenantA,
+      type: 'system',
+      title: 'Sem privilégio',
+      message: 'não deve passar',
+      channels: ['in_app'],
+    }).expect(403);
   });
 
   test('cria uma notificação in-app, aplica dedupe e preserva o contrato de inbox', async () => {

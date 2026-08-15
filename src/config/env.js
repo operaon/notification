@@ -61,7 +61,7 @@ module.exports = {
     privateKey: normalizeKey(process.env.JWT_PRIVATE_KEY),
     publicKey: normalizeKey(process.env.JWT_PUBLIC_KEY),
     issuer: process.env.JWT_ISSUER || 'operaon-identity',
-    audience: parseList(process.env.JWT_AUDIENCE, ['operaon-api', 'operaon-notification']),
+    audience: parseList(process.env.JWT_AUDIENCE, ['operaon-notification']),
     accessTtl: process.env.JWT_ACCESS_EXPIRATION || '15m',
     refreshTtl: process.env.JWT_REFRESH_EXPIRATION || '7d',
   },

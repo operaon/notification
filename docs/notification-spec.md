@@ -26,7 +26,7 @@ Durante a transição, o realtime continua terminando no gateway para preservar 
 
 ## Contrato HTTP
 
-As rotas de negócio exigem simultaneamente `X-Service-Key` e bearer JWT emitido pelo Identity. O token deve conter `tokenType=access`, issuer `operaon-identity`, audience compatível com `operaon-api` e `operaon-notification`, além de `tenantId` quando o recurso for tenant-scoped. Se `X-Tenant-Id` for enviado, ele deve coincidir com o claim do token.
+As rotas de negócio exigem simultaneamente `X-Service-Key` e bearer JWT emitido pelo Identity. O token deve conter `tokenType=access`, issuer `operaon-identity` e audience exclusiva `operaon-notification`, além de `tenantId` quando o recurso for tenant-scoped. Se `X-Tenant-Id` for enviado, ele deve coincidir com o claim do token. Tokens de serviço não recebem privilégios implícitos: operações fora do contexto autenticado exigem a permissão dinâmica correspondente.
 
 | Método | Rota | Finalidade |
 |---|---|---|
